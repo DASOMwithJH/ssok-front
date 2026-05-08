@@ -43,9 +43,9 @@ function IconUser() {
 }
 
 const navItems = [
-  { href: "/", Icon: IconHome, label: "홈" },
+  { href: "/home", Icon: IconHome, label: "홈" },
   { href: "/create", Icon: IconSparkles, label: "굿즈 제작" },
-  { href: "/funding", Icon: IconFunding, label: "펀딩" },
+  { href: "/funding", Icon: IconFunding, label: "내 펀딩" },
   { href: "/mypage", Icon: IconUser, label: "MY" },
 ]
 
@@ -56,8 +56,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background pb-safe md:hidden">
       <div className="mx-3 mb-2 flex h-16 items-center justify-around rounded-2xl bg-white shadow-lg ring-1 ring-border/50">
         {navItems.map((item) => {
-          const isActive = pathname === item.href ||
-            (item.href !== "/" && pathname.startsWith(item.href))
+          const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
 
           return (
             <Link

@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils"
 const trendingGoods = [
   {
     id: 1,
-    title: "IU 콘서트 기념 머그컵",
-    artist: "IU",
+    title: "오후셋 콘서트 기념 머그컵",
+    artist: "오후셋",
     image: "/goods/mug-1.jpg",
     currentParticipants: 45,
     targetParticipants: 50,
@@ -20,8 +20,8 @@ const trendingGoods = [
   },
   {
     id: 2,
-    title: "BTS 아크릴 키링 세트",
-    artist: "BTS",
+    title: "라스트버스 아크릴 키링 세트",
+    artist: "라스트버스",
     image: "/goods/keyring-1.jpg",
     currentParticipants: 120,
     targetParticipants: 150,
@@ -31,8 +31,8 @@ const trendingGoods = [
   },
   {
     id: 3,
-    title: "NewJeans 미니 포스터",
-    artist: "NewJeans",
+    title: "블루시그널 미니 포스터",
+    artist: "블루시그널",
     image: "/goods/poster-1.jpg",
     currentParticipants: 78,
     targetParticipants: 100,
@@ -42,8 +42,8 @@ const trendingGoods = [
   },
   {
     id: 4,
-    title: "aespa 폰케이스",
-    artist: "aespa",
+    title: "슬로우먼데이 폰케이스",
+    artist: "슬로우먼데이",
     image: "/goods/phonecase-1.jpg",
     currentParticipants: 32,
     targetParticipants: 80,

@@ -7,8 +7,7 @@ import { BottomNav } from "@/components/bottom-nav"
 import { HeroSection } from "@/components/home/hero-section"
 import { CategoriesSection } from "@/components/home/categories-section"
 import { TrendingGoods } from "@/components/home/trending-goods"
-import { FeaturedArtists } from "@/components/home/featured-artists"
-import { HowItWorks } from "@/components/home/how-it-works"
+import { GoodsSection } from "@/components/home/goods-section"
 
 export default function HomeContentPage() {
   const router = useRouter()
@@ -19,13 +18,12 @@ export default function HomeContentPage() {
       router.replace("/login")
       return
     }
-
     setCanShowHome(true)
   }, [router])
 
   if (!canShowHome) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 text-sm font-semibold text-muted-foreground">
+      <div className="flex min-h-screen items-center justify-center bg-background text-sm font-semibold text-muted-foreground">
         로그인 화면으로 이동 중...
       </div>
     )
@@ -38,8 +36,7 @@ export default function HomeContentPage() {
         <HeroSection />
         <CategoriesSection />
         <TrendingGoods />
-        <FeaturedArtists />
-        <HowItWorks />
+        <GoodsSection />
       </main>
       <BottomNav />
     </div>

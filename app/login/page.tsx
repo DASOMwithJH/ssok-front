@@ -3,10 +3,24 @@
 import { FormEvent, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { LockKeyhole, Mail, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
+function IconMail() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 22 18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="1" width="20" height="16" rx="3" />
+      <polyline points="1,1 11,10 21,1" />
+    </svg>
+  )
+}
+
+function IconLock() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 20 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="10" width="16" height="11" rx="3" />
+      <path d="M6 10V6a4 4 0 0 1 8 0v4" />
+    </svg>
+  )
+}
 
 export default function LoginPage() {
   const router = useRouter()
@@ -17,85 +31,90 @@ export default function LoginPage() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSubmitting(true)
-
     localStorage.setItem("ssok:isLoggedIn", "true")
     localStorage.setItem("ssok:userEmail", email)
-
     setTimeout(() => {
       router.replace("/home")
     }, 400)
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-secondary/40 px-4 py-8">
-      <div className="w-full max-w-sm">
-        <div className="mb-6 text-center">
-          <div className="relative mx-auto mb-4 h-24 w-24 overflow-hidden rounded-3xl bg-white shadow-lg shadow-primary/20 ring-1 ring-border/60">
-            <Image src="/nk.png" alt="ssok 로그인 이미지" fill priority className="object-cover" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">로그인</h1>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            소소하게 시작해서 마음에 쏙 드는 굿즈를 만들어요.
-            <br />
-            인디밴드 굿즈 생성부터 생산 연결까지 함께합니다.
-          </p>
+    <main className="flex min-h-screen flex-col bg-background px-5 pt-44 pb-10">
+
+      {/* 상단 로고 + 마스코트 */}
+      <div className="mb-10 flex flex-col items-center">
+        <div className="relative h-28 w-28 overflow-hidden rounded-3xl shadow-lg shadow-primary/20 ring-1 ring-border/60">
+          <Image
+            src="/nk.png"
+            alt=""
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
-
-        <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-border/60">
-          <div className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-semibold">
-                이메일
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="h-12 rounded-xl bg-secondary/40 pl-9"
-                  placeholder="fan@ssok.kr"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-semibold">
-                비밀번호
-              </Label>
-              <div className="relative">
-                <LockKeyhole className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="h-12 rounded-xl bg-secondary/40 pl-9"
-                  placeholder="비밀번호 입력"
-                  required
-                />
-              </div>
-            </div>
-
-            <Button type="submit" className="h-12 w-full rounded-xl text-sm font-bold" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Sparkles className="h-4 w-4 animate-spin" />
-                  로그인 중...
-                </>
-              ) : (
-                "로그인하고 홈으로 가기"
-              )}
-            </Button>
-          </div>
-        </form>
-
-        <p className="mt-4 text-center text-xs font-medium text-muted-foreground">
-          계정이 없다면 <span className="underline underline-offset-2">회원가입하러가기</span>
+        <p className="mt-4 text-center text-sm leading-6 text-muted-foreground">
+          좋아하는 아티스트의 굿즈를<br />함께 만들어보세요
         </p>
       </div>
+
+      {/* 폼 */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
+        {/* 이메일 */}
+        <div className="space-y-3">
+          <label htmlFor="email" className="text-xs font-semibold text-foreground">이메일</label>
+          <div className="relative">
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-muted-foreground">
+              <IconMail />
+            </span>
+            <input
+              id="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="fan@ssok.kr"
+              className="h-13 w-full rounded-2xl border border-primary/40 bg-white pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+              style={{ height: "52px" }}
+            />
+          </div>
+        </div>
+
+        {/* 비밀번호 */}
+        <div className="space-y-3">
+          <label htmlFor="password" className="text-xs font-semibold text-foreground">비밀번호</label>
+          <div className="relative">
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-muted-foreground">
+              <IconLock />
+            </span>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호 입력"
+              required
+              className="w-full rounded-2xl border border-primary/40 bg-white pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+              style={{ height: "52px" }}
+            />
+          </div>
+        </div>
+
+        {/* 로그인 버튼 */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="mt-2 flex h-14 w-full items-center justify-center rounded-2xl bg-primary text-sm font-bold text-white shadow-md shadow-primary/30 transition-all active:scale-[0.98] disabled:opacity-70"
+        >
+          {isSubmitting ? "로그인 중..." : "로그인"}
+        </button>
+      </form>
+
+      {/* 회원가입 */}
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        계정이 없으신가요?{" "}
+        <span className="font-semibold text-primary underline underline-offset-2">회원가입</span>
+      </p>
+
     </main>
   )
 }
