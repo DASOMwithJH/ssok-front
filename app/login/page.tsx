@@ -27,19 +27,11 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white px-4 py-5">
-      <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-sm flex-col">
-        <Link
-          href="/"
-          className="mb-8 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-muted-foreground shadow-sm ring-1 ring-border/60"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          <span className="sr-only">뒤로가기</span>
-        </Link>
-
-        <div className="mb-6">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-lg font-bold text-white shadow-md">
-            쏙
+    <main className="flex min-h-screen items-center justify-center bg-secondary/40 px-4 py-8">
+      <div className="w-full max-w-sm">
+        <div className="mb-6 text-center">
+          <div className="relative mx-auto mb-4 h-24 w-24 overflow-hidden rounded-3xl bg-white shadow-lg shadow-primary/20 ring-1 ring-border/60">
+            <Image src="/nk.png" alt="ssok 로그인 이미지" fill priority className="object-cover" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">로그인</h1>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
