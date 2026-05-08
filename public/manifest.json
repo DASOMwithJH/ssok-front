@@ -1,0 +1,29 @@
+{
+  "name": "ssok (쏙) - AI 굿즈 공동구매",
+  "short_name": "ssok",
+  "description": "좋아하는 아티스트의 AI 굿즈를 만들고, 함께 구매하세요",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF7A1A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-light-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "entertainment"]
+}

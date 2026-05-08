@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   description: '좋아하는 아티스트의 AI 굿즈를 만들고, 함께 구매하세요. 팬들이 직접 만드는 특별한 굿즈 플랫폼',
   generator: 'v0.app',
   keywords: ['AI 굿즈', '공동구매', 'K-pop', '팬굿즈', '아티스트 굿즈'],
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'ssok',
+  },
 }
 
 export const viewport: Viewport = {
