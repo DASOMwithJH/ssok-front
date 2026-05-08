@@ -1,37 +1,19 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Bell, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  useEffect(() => {
-    setIsLoggedIn(localStorage.getItem("ssok:isLoggedIn") === "true")
-  }, [])
-
   return (
     <header className="sticky top-0 z-50 w-full bg-background">
       <div className="flex h-14 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-1.5">
+        <Link href="/home" className="flex items-center gap-1.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-md">
             <span className="text-lg font-bold text-white">쏙</span>
           </div>
           <span className="text-xl font-bold text-foreground">ssok</span>
         </Link>
-        
+
         <div className="flex items-center gap-1">
-          <Button
-            asChild
-            size="sm"
-            className="h-9 rounded-xl px-3 text-xs font-semibold shadow-none"
-          >
-            <Link href={isLoggedIn ? "/mypage" : "/login"}>
-              {isLoggedIn ? "마이페이지" : "로그인하기"}
-            </Link>
-          </Button>
           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground">
             <Search className="h-5 w-5" />
             <span className="sr-only">검색</span>

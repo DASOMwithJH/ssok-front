@@ -10,9 +10,10 @@ __v0_jsx-dev-runtime.ts
 .env*.local
 
 # Common ignores
-node_modules
+node_modules/
 .next/
-.DS_Store.npm-cache/
+.DS_Store
+.npm-cache/
 .pnpm-store/
 dev-server.out.log
 dev-server.err.log
