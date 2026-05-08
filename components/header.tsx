@@ -1,18 +1,9 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  useEffect(() => {
-    setIsLoggedIn(localStorage.getItem("ssok:isLoggedIn") === "true")
-  }, [])
-
   return (
     <header className="sticky top-0 z-50 w-full bg-background">
       <div className="flex h-14 items-center justify-between px-4">

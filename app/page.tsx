@@ -6,6 +6,26 @@ import { TrendingGoods } from "@/components/home/trending-goods"
 import { GoodsSection } from "@/components/home/goods-section"
 
 export default function HomePage() {
+  const router = useRouter()
+  const [isSplashVisible, setIsSplashVisible] = useState(true)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      router.replace("/login")
+      setIsSplashVisible(false)
+    }, 1600)
+
+    return () => window.clearTimeout(timer)
+  }, [router])
+
+  if (isSplashVisible) {
+    return <SplashScreen />
+  }
+
+  return <SplashScreen />
+}
+
+function SplashScreen() {
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Header />

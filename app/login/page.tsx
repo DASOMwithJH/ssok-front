@@ -1,16 +1,16 @@
 "use client"
 
 import { FormEvent, useState } from "react"
-import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, LockKeyhole, Mail } from "lucide-react"
+import { LockKeyhole, Mail, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState("user@example.com")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -22,8 +22,8 @@ export default function LoginPage() {
     localStorage.setItem("ssok:userEmail", email)
 
     setTimeout(() => {
-      router.push("/")
-    }, 500)
+      router.replace("/home")
+    }, 400)
   }
 
   return (
@@ -41,16 +41,20 @@ export default function LoginPage() {
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-lg font-bold text-white shadow-md">
             쏙
           </div>
-          <h1 className="text-2xl font-bold leading-tight text-foreground">로그인</h1>
-          <p className="mt-2 max-w-[18rem] break-keep text-sm leading-6 text-muted-foreground">
-            ssok 계정으로 굿즈 제작과 공동구매를 이어가세요.
+          <h1 className="text-2xl font-bold text-foreground">로그인</h1>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            소소하게 시작해서 마음에 쏙 드는 굿즈를 만들어요.
+            <br />
+            인디밴드 굿즈 생성부터 생산 연결까지 함께합니다.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full rounded-2xl bg-white p-5 shadow-sm ring-1 ring-border/60">
+        <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-border/60">
           <div className="space-y-5">
-            <div className="space-y-2.5">
-              <Label htmlFor="email" className="text-sm leading-none">이메일</Label>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-semibold">
+                이메일
+              </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -58,15 +62,17 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="h-12 min-w-0 rounded-xl pl-9 pr-3 text-sm leading-none"
-                  placeholder="user@example.com"
+                  className="h-12 rounded-xl bg-secondary/40 pl-9"
+                  placeholder="fan@ssok.kr"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-2.5">
-              <Label htmlFor="password" className="text-sm leading-none">비밀번호</Label>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-semibold">
+                비밀번호
+              </Label>
               <div className="relative">
                 <LockKeyhole className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -74,21 +80,28 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  className="h-12 min-w-0 rounded-xl pl-9 pr-3 text-sm leading-none"
+                  className="h-12 rounded-xl bg-secondary/40 pl-9"
                   placeholder="비밀번호 입력"
                   required
                 />
               </div>
             </div>
 
-            <Button type="submit" className="h-12 w-full rounded-xl text-sm font-semibold" disabled={isSubmitting}>
-              {isSubmitting ? "로그인 중..." : "로그인하기"}
+            <Button type="submit" className="h-12 w-full rounded-xl text-sm font-bold" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Sparkles className="h-4 w-4 animate-spin" />
+                  로그인 중...
+                </>
+              ) : (
+                "로그인하고 홈으로 가기"
+              )}
             </Button>
           </div>
         </form>
 
-        <p className="mx-auto mt-4 max-w-[18rem] break-keep text-center text-xs leading-5 text-muted-foreground">
-          테스트용 화면이라 아무 비밀번호나 입력해도 로그인됩니다.
+        <p className="mt-4 text-center text-xs font-medium text-muted-foreground">
+          계정이 없다면 <span className="underline underline-offset-2">회원가입하러가기</span>
         </p>
       </div>
     </main>
