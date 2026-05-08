@@ -1,146 +1,211 @@
 "use client"
 
-import Link from "next/link"
 import { useState } from "react"
-import { ArrowLeft, CalendarDays, CheckCircle, ClipboardPlus, ImagePlus, Package, Plus, Truck } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
 import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Progress } from "@/components/ui/progress"
+import { cn } from "@/lib/utils"
 
-const priceTiers = [
-  { range: "30~49개", price: "18,000원" },
-  { range: "50~99개", price: "15,000원" },
-  { range: "100개 이상", price: "12,000원" },
+const myFundings = [
+  {
+    id: 1,
+    title: "인디밴드 콘서트 기념 머그컵",
+    artist: "인디밴드 A",
+    image: "/goods/mug-1.jpg",
+    status: "ongoing",
+    currentParticipants: 45,
+    targetParticipants: 80,
+    currentPrice: 15000,
+    daysLeft: 8,
+    createdAt: "2024.02.10",
+  },
+  {
+    id: 2,
+    title: "K-pop 페스티벌 기념 에코백",
+    artist: "페스티벌 공식",
+    image: "/goods/bag-1.jpg",
+    status: "review",
+    currentParticipants: 0,
+    targetParticipants: 50,
+    currentPrice: 18000,
+    daysLeft: null,
+    createdAt: "2024.02.12",
+  },
+  {
+    id: 3,
+    title: "NewJeans 팬미팅 아크릴 키링",
+    artist: "NewJeans",
+    image: "/goods/keyring-1.jpg",
+    status: "completed",
+    currentParticipants: 120,
+    targetParticipants: 100,
+    currentPrice: 8000,
+    daysLeft: 0,
+    createdAt: "2024.01.20",
+  },
 ]
 
+const tabs = [
+  { id: "all", label: "전체" },
+  { id: "ongoing", label: "진행중" },
+  { id: "review", label: "심사중" },
+  { id: "completed", label: "완료" },
+]
+
+const statusConfig: Record<string, { label: string; color: string }> = {
+  ongoing: { label: "진행중", color: "bg-primary/10 text-primary" },
+  review: { label: "심사중", color: "bg-amber-100 text-amber-600" },
+  completed: { label: "모집완료", color: "bg-green-100 text-green-600" },
+}
+
+function IconPlus() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+      <line x1="11" y1="4" x2="11" y2="18" />
+      <line x1="4" y1="11" x2="18" y2="11" />
+    </svg>
+  )
+}
+
+function IconUsers() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="6" cy="4" r="2.5" />
+      <path d="M1 13c0-2.8 2.2-5 5-5s5 2.2 5 5" />
+      <circle cx="12" cy="4.5" r="2" />
+      <path d="M14.5 13c0-2-1.3-3.7-3-4.4" />
+    </svg>
+  )
+}
+
+function IconClock() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="7" cy="7" r="5.5" />
+      <polyline points="7,3.5 7,7 9.5,8.5" />
+    </svg>
+  )
+}
+
 export default function FundingPage() {
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [activeTab, setActiveTab] = useState("all")
+
+  const filtered = activeTab === "all"
+    ? myFundings
+    : myFundings.filter(f => f.status === activeTab)
 
   return (
     <div className="min-h-screen bg-background pb-24">
       <Header />
 
       <main className="px-4 py-4">
-        <div className="mb-4 flex items-center gap-3">
-          <Link href="/" className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-foreground">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-lg font-bold text-foreground">펀딩 등록하기</h1>
-            <p className="text-xs text-muted-foreground">업체가 승락한 제작 조건으로 굿즈 펀딩을 등록하세요</p>
-          </div>
+        {/* 타이틀 */}
+        <div className="mb-5">
+          <h1 className="text-xl font-bold text-foreground">내 펀딩</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">내가 등록한 굿즈 펀딩 현황이에요</p>
         </div>
 
-        <section className="mb-4 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/20 p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <ClipboardPlus className="h-5 w-5 text-primary" />
-            <h2 className="text-sm font-bold text-foreground">등록 전 확인</h2>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-xl bg-white p-3 ring-1 ring-border/60">
-              <Package className="mx-auto mb-1 h-4 w-4 text-primary" />
-              <p className="text-[10px] font-semibold text-foreground">디자인 확정</p>
-            </div>
-            <div className="rounded-xl bg-white p-3 ring-1 ring-border/60">
-              <CheckCircle className="mx-auto mb-1 h-4 w-4 text-primary" />
-              <p className="text-[10px] font-semibold text-foreground">업체 승락</p>
-            </div>
-            <div className="rounded-xl bg-white p-3 ring-1 ring-border/60">
-              <Truck className="mx-auto mb-1 h-4 w-4 text-primary" />
-              <p className="text-[10px] font-semibold text-foreground">배송비 확인</p>
-            </div>
-          </div>
-        </section>
+        {/* 탭 */}
+        <div className="mb-4 flex gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "rounded-full px-4 py-1.5 text-xs font-semibold transition-all",
+                activeTab === tab.id
+                  ? "bg-primary text-white shadow-sm shadow-primary/25"
+                  : "bg-secondary text-muted-foreground"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-        <section className="space-y-4">
-          <div className="rounded-2xl bg-white p-4 ring-1 ring-border/60">
-            <h2 className="mb-3 text-sm font-bold text-foreground">펀딩 기본 정보</h2>
-            <div className="space-y-3">
-              <Input placeholder="펀딩 제목" defaultValue="인디밴드 콘서트 기념 머그컵" className="rounded-xl bg-secondary/50" />
-              <Textarea
-                placeholder="굿즈 소개"
-                defaultValue="공연의 분위기와 밴드의 공식 이미지를 바탕으로 제작한 한정 굿즈입니다."
-                className="min-h-24 rounded-xl bg-secondary/50"
-              />
-              <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-primary/40 bg-secondary/40 px-4 py-5 text-center">
-                <ImagePlus className="mb-2 h-6 w-6 text-primary" />
-                <span className="text-sm font-semibold text-foreground">대표 이미지 등록</span>
-                <span className="mt-1 text-[11px] text-muted-foreground">생성된 굿즈 이미지나 목업을 올려주세요</span>
-                <input type="file" accept="image/*" className="sr-only" />
-              </label>
-            </div>
+        {/* 펀딩 목록 */}
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="mb-3 text-4xl">📭</div>
+            <p className="text-sm font-medium text-foreground">등록된 펀딩이 없어요</p>
+            <p className="mt-1 text-xs text-muted-foreground">새 펀딩을 등록해보세요</p>
           </div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map((funding) => {
+              const progress = Math.min((funding.currentParticipants / funding.targetParticipants) * 100, 100)
+              const status = statusConfig[funding.status]
 
-          <div className="rounded-2xl bg-white p-4 ring-1 ring-border/60">
-            <h2 className="mb-3 text-sm font-bold text-foreground">제작 조건</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <Input placeholder="최소 수량" defaultValue="30개" className="rounded-xl bg-secondary/50" />
-              <Input placeholder="최대 수량" defaultValue="200개" className="rounded-xl bg-secondary/50" />
-              <Input placeholder="배송비" defaultValue="3,000원" className="rounded-xl bg-secondary/50" />
-              <Input placeholder="마감일" defaultValue="14일 후" className="rounded-xl bg-secondary/50" />
-            </div>
-          </div>
+              return (
+                <div
+                  key={funding.id}
+                  className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border/50"
+                >
+                  <div className="flex gap-3 p-3">
+                    {/* 썸네일 */}
+                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-secondary">
+                      <Image src={funding.image} alt={funding.title} fill className="object-cover" />
+                    </div>
 
-          <div className="rounded-2xl bg-white p-4 ring-1 ring-border/60">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-foreground">수량별 금액</h2>
-              <button type="button" className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-[11px] font-semibold text-foreground">
-                <Plus className="h-3 w-3" />
-                추가
-              </button>
-            </div>
-            <div className="space-y-2">
-              {priceTiers.map((tier) => (
-                <div key={tier.range} className="flex items-center justify-between rounded-xl bg-secondary/50 px-3 py-2">
-                  <span className="text-xs font-medium text-muted-foreground">{tier.range}</span>
-                  <span className="text-sm font-bold text-foreground">{tier.price}</span>
+                    {/* 정보 */}
+                    <div className="flex flex-1 flex-col justify-between min-w-0">
+                      <div>
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className={cn("rounded-md px-2 py-0.5 text-[10px] font-bold", status.color)}>
+                            {status.label}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{funding.createdAt}</span>
+                        </div>
+                        <p className="text-[10px] font-semibold text-primary">{funding.artist}</p>
+                        <h3 className="line-clamp-1 text-sm font-bold text-foreground">{funding.title}</h3>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-foreground">{funding.currentPrice.toLocaleString()}원</span>
+                        {funding.status === "ongoing" && funding.daysLeft !== null && (
+                          <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                            <IconClock />
+                            D-{funding.daysLeft}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 진행률 — 진행중/완료만 */}
+                  {(funding.status === "ongoing" || funding.status === "completed") && (
+                    <div className="border-t border-border/50 px-3 py-2.5">
+                      <div className="mb-1.5 flex items-center justify-between text-[11px]">
+                        <div className="flex items-center gap-1 text-muted-foreground">
+                          <IconUsers />
+                          <span>
+                            <strong className="text-foreground">{funding.currentParticipants}명</strong> / {funding.targetParticipants}명
+                          </span>
+                        </div>
+                        <span className="font-bold text-primary">{Math.round(progress)}%</span>
+                      </div>
+                      <Progress value={progress} className="h-1.5" />
+                    </div>
+                  )}
+
+                  {/* 심사중 메시지 */}
+                  {funding.status === "review" && (
+                    <div className="border-t border-border/50 bg-amber-50/60 px-3 py-2.5">
+                      <p className="text-[11px] text-amber-600">
+                        업체 조건 및 이미지 심사 중입니다. 완료되면 알려드릴게요.
+                      </p>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-            <p className="mt-2 text-[11px] leading-4 text-muted-foreground">
-              처음 결제 금액은 최대 금액으로 안내하고, 확정 수량에 따라 차액 환불이 진행됩니다.
-            </p>
+              )
+            })}
           </div>
-
-          <div className="rounded-2xl bg-white p-4 ring-1 ring-border/60">
-            <h2 className="mb-3 text-sm font-bold text-foreground">펀딩 일정</h2>
-            <div className="flex items-center gap-3 rounded-xl bg-secondary/50 p-3">
-              <CalendarDays className="h-5 w-5 text-primary" />
-              <div>
-                <p className="text-sm font-semibold text-foreground">등록 후 심사 완료 시 공개</p>
-                <p className="text-[11px] text-muted-foreground">업체 조건, 이미지, 아티스트 자료 사용 여부를 확인합니다</p>
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsSubmitted(true)}
-            className="flex w-full items-center justify-center rounded-xl bg-primary py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 active:scale-[0.98]"
-          >
-            펀딩 등록 요청하기
-          </button>
-        </section>
+        )}
       </main>
 
-      {isSubmitted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-5">
-          <div className="w-full max-w-sm rounded-2xl bg-white px-5 py-6 text-center shadow-2xl">
-            <CheckCircle className="mx-auto mb-4 h-12 w-12 text-primary" />
-            <h2 className="text-lg font-bold text-foreground">펀딩 등록 요청을 보냈어요!</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">심사가 완료되면 펀딩 페이지가 공개됩니다.</p>
-            <Link
-              href="/"
-              className="mt-6 flex w-full items-center justify-center rounded-xl bg-primary py-3 text-sm font-bold text-white"
-            >
-              홈으로 돌아가기
-            </Link>
-          </div>
-        </div>
-      )}
-
-      <BottomNav />
+<BottomNav />
     </div>
   )
 }

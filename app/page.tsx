@@ -3,8 +3,7 @@ import { BottomNav } from "@/components/bottom-nav"
 import { HeroSection } from "@/components/home/hero-section"
 import { CategoriesSection } from "@/components/home/categories-section"
 import { TrendingGoods } from "@/components/home/trending-goods"
-import { FeaturedArtists } from "@/components/home/featured-artists"
-import { HowItWorks } from "@/components/home/how-it-works"
+import { GoodsSection } from "@/components/home/goods-section"
 
 export default function HomePage() {
   return (
@@ -14,8 +13,7 @@ export default function HomePage() {
         <HeroSection />
         <CategoriesSection />
         <TrendingGoods />
-        <FeaturedArtists />
-        <HowItWorks />
+        <GoodsSection />
       </main>
       <BottomNav />
     </div>

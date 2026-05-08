@@ -4,76 +4,75 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* ssok brand colors */
-  /* Main: #FF7A1A, Background: #FFFFFF, Secondary: #FFF3E8, Accent: #FFB86B, Text: #241A14 */
+  /* ssok brand colors — pastel orange */
   --background: #FFFFFF;
-  --foreground: #241A14;
+  --foreground: #2C1F14;
   --card: #FFFFFF;
-  --card-foreground: #241A14;
+  --card-foreground: #2C1F14;
   --popover: #FFFFFF;
-  --popover-foreground: #241A14;
-  --primary: #FF7A1A;
+  --popover-foreground: #2C1F14;
+  --primary: #F4845F;
   --primary-foreground: #FFFFFF;
-  --secondary: #FFF3E8;
-  --secondary-foreground: #241A14;
-  --muted: #FFF3E8;
-  --muted-foreground: #6B5344;
-  --accent: #FFB86B;
-  --accent-foreground: #241A14;
+  --secondary: #FDF0E8;
+  --secondary-foreground: #2C1F14;
+  --muted: #FDF0E8;
+  --muted-foreground: #9A7B6A;
+  --accent: #F9B48A;
+  --accent-foreground: #2C1F14;
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
-  --border: #FFE4CC;
-  --input: #FFE4CC;
-  --ring: #FF7A1A;
-  --chart-1: #FF7A1A;
-  --chart-2: #FFB86B;
-  --chart-3: #FFF3E8;
-  --chart-4: #241A14;
-  --chart-5: #6B5344;
+  --border: #F5DDD0;
+  --input: #F5DDD0;
+  --ring: #F4845F;
+  --chart-1: #F4845F;
+  --chart-2: #F9B48A;
+  --chart-3: #FDF0E8;
+  --chart-4: #2C1F14;
+  --chart-5: #9A7B6A;
   --radius: 0.75rem;
-  --sidebar: #FFF3E8;
-  --sidebar-foreground: #241A14;
-  --sidebar-primary: #FF7A1A;
+  --sidebar: #FDF0E8;
+  --sidebar-foreground: #2C1F14;
+  --sidebar-primary: #F4845F;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FFB86B;
-  --sidebar-accent-foreground: #241A14;
-  --sidebar-border: #FFE4CC;
-  --sidebar-ring: #FF7A1A;
+  --sidebar-accent: #F9B48A;
+  --sidebar-accent-foreground: #2C1F14;
+  --sidebar-border: #F5DDD0;
+  --sidebar-ring: #F4845F;
 }
 
 .dark {
-  --background: #1A1412;
-  --foreground: #FFF3E8;
-  --card: #241A14;
-  --card-foreground: #FFF3E8;
-  --popover: #241A14;
-  --popover-foreground: #FFF3E8;
-  --primary: #FF7A1A;
+  --background: #1C1512;
+  --foreground: #FDF0E8;
+  --card: #261B14;
+  --card-foreground: #FDF0E8;
+  --popover: #261B14;
+  --popover-foreground: #FDF0E8;
+  --primary: #F4845F;
   --primary-foreground: #FFFFFF;
-  --secondary: #3D2E24;
-  --secondary-foreground: #FFF3E8;
-  --muted: #3D2E24;
-  --muted-foreground: #A89080;
-  --accent: #FFB86B;
-  --accent-foreground: #241A14;
+  --secondary: #3A2820;
+  --secondary-foreground: #FDF0E8;
+  --muted: #3A2820;
+  --muted-foreground: #B09080;
+  --accent: #F9B48A;
+  --accent-foreground: #2C1F14;
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
-  --border: #3D2E24;
-  --input: #3D2E24;
-  --ring: #FF7A1A;
-  --chart-1: #FF7A1A;
-  --chart-2: #FFB86B;
-  --chart-3: #3D2E24;
-  --chart-4: #FFF3E8;
-  --chart-5: #A89080;
-  --sidebar: #241A14;
-  --sidebar-foreground: #FFF3E8;
-  --sidebar-primary: #FF7A1A;
+  --border: #3A2820;
+  --input: #3A2820;
+  --ring: #F4845F;
+  --chart-1: #F4845F;
+  --chart-2: #F9B48A;
+  --chart-3: #3A2820;
+  --chart-4: #FDF0E8;
+  --chart-5: #B09080;
+  --sidebar: #261B14;
+  --sidebar-foreground: #FDF0E8;
+  --sidebar-primary: #F4845F;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FFB86B;
-  --sidebar-accent-foreground: #241A14;
-  --sidebar-border: #3D2E24;
-  --sidebar-ring: #FF7A1A;
+  --sidebar-accent: #F9B48A;
+  --sidebar-accent-foreground: #2C1F14;
+  --sidebar-border: #3A2820;
+  --sidebar-ring: #F4845F;
 }
 
 @theme inline {
@@ -121,7 +120,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
+    overscroll-behavior: none;
     @apply bg-background text-foreground;
   }
 }

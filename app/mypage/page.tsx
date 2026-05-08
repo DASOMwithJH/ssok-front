@@ -81,7 +81,7 @@ const settingsItems = [
 
 export default function MyPage() {
   return (
-    <div className="min-h-screen bg-secondary/30 pb-24">
+    <div className="min-h-screen bg-white pb-24">
       <Header />
       
       <main className="px-4 py-5">
@@ -146,60 +146,6 @@ export default function MyPage() {
               )}
             </Link>
           ))}
-        </div>
-
-        {/* Recent Orders */}
-        <div className="mb-5">
-          <div className="mb-3 flex items-center justify-between px-1">
-            <h2 className="text-sm font-bold text-foreground">최근 주문</h2>
-            <Link href="/mypage/orders" className="flex items-center gap-0.5 text-xs text-muted-foreground">
-              전체보기
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-          
-          <div className="space-y-2">
-            {recentOrders.map((order) => (
-              <Link key={order.id} href={`/mypage/orders/${order.id}`}>
-                <div className="flex gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-border/50 transition-all active:scale-[0.99]">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-secondary">
-                    <Image
-                      src={order.image}
-                      alt={order.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="mb-1 flex items-center gap-2">
-                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold text-white ${order.statusColor}`}>
-                        {order.status}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground">{order.date}</span>
-                    </div>
-                    <p className="text-[10px] text-primary">{order.artist}</p>
-                    <h3 className="line-clamp-1 text-xs font-semibold text-foreground">{order.title}</h3>
-                    <p className="mt-0.5 text-xs font-bold text-foreground">{order.price.toLocaleString()}원</p>
-                    
-                    {order.progress && (
-                      <div className="mt-1.5 space-y-1">
-                        <div className="flex items-center justify-between text-[10px]">
-                          <span className="flex items-center gap-0.5 text-muted-foreground">
-                            <Users className="h-3 w-3" />
-                            모집중
-                          </span>
-                          <span className="font-semibold text-primary">
-                            {order.progress}/{order.target}명
-                          </span>
-                        </div>
-                        <Progress value={(order.progress / order.target) * 100} className="h-1" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
         </div>
 
         {/* Settings Menu */}

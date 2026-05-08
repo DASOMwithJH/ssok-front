@@ -365,19 +365,19 @@ export default function CreatePage() {
                 disabled={isGenerating}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent py-3 text-sm font-semibold text-white shadow-md shadow-primary/30 transition-all active:scale-[0.98] disabled:opacity-70"
               >
-                {isGenerating ? (
-                  <>
-                    <Sparkles className="h-4 w-4 animate-spin" />
-                    생성 중...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4" />
-                    디자인 생성하기
-                  </>
-                )}
+                {isGenerating ? "잠시만 기다려주세요..." : "디자인 생성하기"}
               </button>
             </div>
+
+            {isGenerating && (
+              <div className="flex flex-col items-center justify-center rounded-2xl bg-secondary/50 py-10">
+                <div className="relative mb-3 h-28 w-28">
+                  <Image src="/mascot/sleep.png" alt="생성 중" fill className="object-contain" />
+                </div>
+                <p className="text-sm font-semibold text-foreground">AI가 디자인을 만들고 있어요</p>
+                <p className="mt-1 text-xs text-muted-foreground">잠깐 기다리면 곧 나와요 🐾</p>
+              </div>
+            )}
 
             {showGeneratedDesigns && (
             <div>

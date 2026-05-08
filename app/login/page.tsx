@@ -27,7 +27,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-secondary/30 px-4 py-5">
+    <main className="min-h-screen bg-white px-4 py-5">
       <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-sm flex-col">
         <Link
           href="/"

@@ -1,63 +1,35 @@
 "use client"
 
-import Image from "next/image"
-import Link from "next/link"
 import { useState, useEffect } from "react"
+import Link from "next/link"
+import Image from "next/image"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 
-const trendingGoods = [
-  {
-    id: 1,
-    title: "IU 콘서트 기념 머그컵",
-    artist: "IU",
-    image: "/goods/mug-1.jpg",
-    currentParticipants: 45,
-    targetParticipants: 50,
-    originalPrice: 18000,
-    currentPrice: 12000,
-    daysLeft: 3,
-  },
-  {
-    id: 2,
-    title: "BTS 아크릴 키링 세트",
-    artist: "BTS",
-    image: "/goods/keyring-1.jpg",
-    currentParticipants: 120,
-    targetParticipants: 150,
-    originalPrice: 15000,
-    currentPrice: 8000,
-    daysLeft: 5,
-  },
-  {
-    id: 3,
-    title: "NewJeans 미니 포스터",
-    artist: "NewJeans",
-    image: "/goods/poster-1.jpg",
-    currentParticipants: 78,
-    targetParticipants: 100,
-    originalPrice: 9000,
-    currentPrice: 5000,
-    daysLeft: 7,
-  },
-  {
-    id: 4,
-    title: "aespa 폰케이스",
-    artist: "aespa",
-    image: "/goods/phonecase-1.jpg",
-    currentParticipants: 32,
-    targetParticipants: 80,
-    originalPrice: 25000,
-    currentPrice: 15000,
-    daysLeft: 10,
-  },
+const categories = [
+  { id: "all", name: "전체" },
+  { id: "mug", name: "머그컵" },
+  { id: "phonecase", name: "폰케이스" },
+  { id: "bag", name: "에코백" },
+  { id: "poster", name: "포스터" },
+  { id: "apparel", name: "의류" },
+  { id: "keyring", name: "키링" },
 ]
 
-type Goods = typeof trendingGoods[number]
+const goodsList = [
+  { id: 1, title: "IU 콘서트 기념 머그컵", artist: "IU", category: "mug", image: "/goods/mug-1.jpg", currentParticipants: 45, targetParticipants: 50, originalPrice: 18000, currentPrice: 12000, daysLeft: 3, status: "ongoing" },
+  { id: 2, title: "BTS 아크릴 키링 세트", artist: "BTS", category: "keyring", image: "/goods/keyring-1.jpg", currentParticipants: 120, targetParticipants: 150, originalPrice: 15000, currentPrice: 8000, daysLeft: 5, status: "ongoing" },
+  { id: 3, title: "NewJeans 미니 포스터", artist: "NewJeans", category: "poster", image: "/goods/poster-1.jpg", currentParticipants: 78, targetParticipants: 100, originalPrice: 9000, currentPrice: 5000, daysLeft: 7, status: "ongoing" },
+  { id: 4, title: "aespa 폰케이스", artist: "aespa", category: "phonecase", image: "/goods/phonecase-1.jpg", currentParticipants: 32, targetParticipants: 80, originalPrice: 25000, currentPrice: 15000, daysLeft: 10, status: "ongoing" },
+  { id: 5, title: "SEVENTEEN 에코백", artist: "SEVENTEEN", category: "bag", image: "/goods/bag-1.jpg", currentParticipants: 200, targetParticipants: 200, originalPrice: 28000, currentPrice: 18000, daysLeft: 0, status: "completed" },
+  { id: 6, title: "Stray Kids 후드티", artist: "Stray Kids", category: "apparel", image: "/goods/hoodie-1.jpg", currentParticipants: 55, targetParticipants: 100, originalPrice: 55000, currentPrice: 42000, daysLeft: 14, status: "ongoing" },
+]
+
+type Goods = typeof goodsList[number]
 
 function IconClock() {
   return (
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="7" cy="7" r="5.5" />
       <polyline points="7,3.5 7,7 9.5,8.5" />
     </svg>
@@ -66,20 +38,11 @@ function IconClock() {
 
 function IconUsers() {
   return (
-    <svg width="13" height="13" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="11" height="11" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="6" cy="4" r="2.5" />
       <path d="M1 13c0-2.8 2.2-5 5-5s5 2.2 5 5" />
       <circle cx="12" cy="4.5" r="2" />
       <path d="M14.5 13c0-2-1.3-3.7-3-4.4" />
-    </svg>
-  )
-}
-
-function IconArrowRight() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="2" y1="7" x2="12" y2="7" />
-      <polyline points="8,3 12,7 8,11" />
     </svg>
   )
 }
@@ -125,7 +88,6 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
       )}
       onClick={handleClose}
     >
-      {/* 모달 카드 — 중앙에서 확대 */}
       <div
         className={cn(
           "relative w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 ease-out",
@@ -133,7 +95,6 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 닫기 버튼 */}
         <button
           onClick={handleClose}
           className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/10 text-white backdrop-blur-sm transition-all hover:bg-black/20"
@@ -141,27 +102,27 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
           <IconClose />
         </button>
 
-        {/* 상단 이미지 — 비율 축소해서 텍스트 공간 확보 */}
         <div className="relative w-full overflow-hidden bg-secondary" style={{ aspectRatio: "16/9" }}>
           <Image src={goods.image} alt={goods.title} fill className="object-cover" />
-          {/* 이미지 위 그라디언트 */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-          {/* 배지들 */}
           <div className="absolute bottom-3 left-3 flex items-center gap-2">
-            <span className="flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-foreground">
-              <IconClock />
-              <span className="ml-0.5">D-{goods.daysLeft}</span>
-            </span>
+            {goods.status === "completed" ? (
+              <span className="rounded-full bg-green-500 px-2.5 py-1 text-[11px] font-bold text-white">
+                모집완료
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-foreground">
+                <IconClock />
+                <span className="ml-0.5">D-{goods.daysLeft}</span>
+              </span>
+            )}
             <span className="rounded-full bg-primary px-2.5 py-1 text-[11px] font-bold text-white">
               {discount}% 할인
             </span>
           </div>
         </div>
 
-        {/* 본문 — 텍스트 중심 */}
         <div className="px-5 pb-5 pt-4">
-
-          {/* 아티스트 태그 + 제목 */}
           <div className="mb-4">
             <span className="mb-2 inline-block rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary">
               {goods.artist}
@@ -171,7 +132,6 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
 
           <div className="mb-4 h-px bg-border" />
 
-          {/* 가격 */}
           <div className="mb-4 flex items-end justify-between">
             <div>
               <p className="mb-0.5 text-[11px] text-muted-foreground">현재 가격</p>
@@ -185,7 +145,6 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
             </span>
           </div>
 
-          {/* 가격 세부 */}
           <div className="mb-4 space-y-1.5 rounded-2xl bg-secondary/50 px-4 py-3 text-xs">
             <div className="flex justify-between text-muted-foreground">
               <span>배송비</span>
@@ -201,7 +160,6 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
             </div>
           </div>
 
-          {/* 진행률 */}
           <div className="mb-5 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-1 text-muted-foreground">
@@ -218,7 +176,6 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
             </p>
           </div>
 
-          {/* CTA */}
           <Link
             href={`/goods/${goods.id}`}
             onClick={handleClose}
@@ -232,27 +189,42 @@ function GoodsModal({ goods, onClose }: { goods: Goods; onClose: () => void }) {
   )
 }
 
-export function TrendingGoods() {
+export function GoodsSection() {
+  const [selected, setSelected] = useState("all")
   const [selectedGoods, setSelectedGoods] = useState<Goods | null>(null)
 
+  const filtered = selected === "all" ? goodsList : goodsList.filter(g => g.category === selected)
+
   return (
-    <section className="py-5">
-      <div className="px-4 mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="text-base font-bold text-foreground">인기 공동제작</h2>
-          <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
-            <IconClock />
-            마감임박
-          </span>
-        </div>
-        <Link href="/goods" className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-primary">
-          더보기
-          <IconArrowRight />
+    <section className="pb-6">
+      <div className="px-4 mb-3 flex items-center justify-between">
+        <h2 className="text-base font-bold text-foreground">공동제작</h2>
+        <Link href="/goods" className="text-xs text-muted-foreground hover:text-primary">
+          전체보기 →
         </Link>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
-        {trendingGoods.map((goods) => {
+      {/* 카테고리 필터 */}
+      <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setSelected(cat.id)}
+            className={cn(
+              "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all",
+              selected === cat.id
+                ? "bg-primary text-white shadow-sm shadow-primary/30"
+                : "bg-secondary text-muted-foreground"
+            )}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      {/* 굿즈 그리드 */}
+      <div className="grid grid-cols-2 gap-3 px-4">
+        {filtered.map((goods) => {
           const progress = (goods.currentParticipants / goods.targetParticipants) * 100
           const discount = Math.round((1 - goods.currentPrice / goods.originalPrice) * 100)
 
@@ -261,20 +233,21 @@ export function TrendingGoods() {
               key={goods.id}
               type="button"
               onClick={() => setSelectedGoods(goods)}
-              className="group min-w-[160px] flex-shrink-0 text-left"
+              className="group text-left"
             >
               <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border/50 transition-all group-hover:shadow-md group-active:scale-[0.97]">
                 <div className="relative aspect-square overflow-hidden bg-secondary">
-                  <Image
-                    src={goods.image}
-                    alt={goods.title}
-                    fill
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
-                  <div className="absolute left-2 top-2 flex items-center gap-1 rounded-lg bg-black/50 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
-                    <IconClock />
-                    D-{goods.daysLeft}
-                  </div>
+                  <Image src={goods.image} alt={goods.title} fill className="object-cover transition-transform group-hover:scale-105" />
+                  {goods.status === "completed" ? (
+                    <div className="absolute left-2 top-2 rounded-lg bg-green-500 px-2 py-1 text-[10px] font-bold text-white">
+                      모집완료
+                    </div>
+                  ) : (
+                    <div className="absolute left-2 top-2 flex items-center gap-1 rounded-lg bg-black/50 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
+                      <IconClock />
+                      D-{goods.daysLeft}
+                    </div>
+                  )}
                   <div className="absolute right-2 top-2 rounded-lg bg-primary px-2 py-1 text-[10px] font-bold text-white">
                     {discount}%
                   </div>
@@ -283,11 +256,11 @@ export function TrendingGoods() {
                 <div className="p-3">
                   <p className="mb-0.5 text-[10px] font-semibold text-primary">{goods.artist}</p>
                   <h3 className="mb-2 line-clamp-2 text-xs font-semibold leading-tight text-foreground">{goods.title}</h3>
-                  <div className="mb-1 flex items-baseline gap-1.5">
+                  <div className="mb-2 flex items-baseline gap-1.5">
                     <span className="text-sm font-bold text-foreground">{goods.currentPrice.toLocaleString()}원</span>
                     <span className="text-[10px] text-muted-foreground line-through">{goods.originalPrice.toLocaleString()}원</span>
                   </div>
-                  <div className="space-y-1 mt-2">
+                  <div className="space-y-1">
                     <div className="flex items-center justify-between text-[10px]">
                       <div className="flex items-center gap-0.5 text-muted-foreground">
                         <IconUsers />
