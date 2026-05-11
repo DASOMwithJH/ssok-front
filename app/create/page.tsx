@@ -1,10 +1,11 @@
 "use client"
 
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
 import { cn } from "@/lib/utils"
+import { api } from "@/lib/api"
 
 type Screen = "input" | "generating" | "result" | "vendors"
 
@@ -13,6 +14,8 @@ const vendors = [
   { id: 2, name: "프리메이드 코리아", initial: "프", color: "bg-blue-100 text-blue-500", tag: "대량할인", rating: 4.6, orders: 89, minQty: 50, maxQty: 500, price: "10,000원~", days: 10, categories: ["bag", "tshirt", "poster"] },
   { id: 3, name: "아이돌굿즈", initial: "아", color: "bg-pink-100 text-pink-500", tag: "팬굿즈 전문", rating: 4.9, orders: 256, minQty: 20, maxQty: 100, price: "15,000원~", days: 5, categories: ["keyring", "poster", "phonecase", "mug"] },
   { id: 4, name: "크리에이티브랩", initial: "크", color: "bg-violet-100 text-violet-500", tag: "고퀄리티", rating: 4.7, orders: 64, minQty: 30, maxQty: 150, price: "18,000원~", days: 8, categories: ["tshirt", "bag", "mug"] },
+  { id: 5, name: "도자기공방 온기", initial: "온", color: "bg-amber-100 text-amber-600", tag: "머그컵 전문", rating: 4.9, orders: 183, minQty: 20, maxQty: 150, price: "13,000원~", days: 9, categories: ["mug"] },
+  { id: 6, name: "머그스튜디오", initial: "머", color: "bg-teal-100 text-teal-600", tag: "소량OK", rating: 4.7, orders: 94, minQty: 10, maxQty: 100, price: "16,000원~", days: 6, categories: ["mug"] },
 ]
 
 const goodsCategories = [
@@ -24,23 +27,16 @@ const goodsCategories = [
   { id: "tshirt", name: "티셔츠", icon: "👕" },
 ]
 
-const artists = [
-  { id: 1, name: "오후셋", desc: "느린 오후의 감성을 노래하는 4인조 밴드" },
-  { id: 2, name: "세컨드플로어", desc: "소극장 기반의 인디 록 밴드" },
-  { id: 3, name: "블루시그널", desc: "도시적인 감성 록 밴드" },
-  { id: 4, name: "라스트버스", desc: "막차와 밤거리를 노래하는 밴드" },
-  { id: 5, name: "슬로우먼데이", desc: "무기력한 월요일의 감성을 담은 밴드" },
-  { id: 6, name: "노웨어스테이지", desc: "아직 더 많은 무대가 필요한 신인 밴드" },
-  { id: 7, name: "플레인무드", desc: "과하지 않은 미니멀 밴드 사운드" },
-  { id: 8, name: "애프터노이즈", desc: "거칠지만 감정적인 기타 중심 밴드" },
-]
-
-const generatedDesigns = [
-  { id: 1, image: "/generated/design-1.jpg" },
-  { id: 2, image: "/generated/design-2.jpg" },
-  { id: 3, image: "/generated/design-3.jpg" },
-  { id: 4, image: "/generated/design-4.jpg" },
-]
+async function getOrCreateImageFile(file: File | null): Promise<File> {
+  if (file) return file
+  const canvas = document.createElement("canvas")
+  canvas.width = 1; canvas.height = 1
+  const ctx = canvas.getContext("2d")!
+  ctx.fillStyle = "white"
+  ctx.fillRect(0, 0, 1, 1)
+  const blob = await new Promise<Blob>(resolve => canvas.toBlob(resolve as BlobCallback, "image/png"))
+  return new File([blob], "blank.png", { type: "image/png" })
+}
 
 function IconClose() {
   return (
@@ -64,7 +60,6 @@ export default function CreatePage() {
   const [prompt, setPrompt] = useState("")
   const [referenceImage, setReferenceImage] = useState<File | null>(null)
   const [referencePreview, setReferencePreview] = useState<string | null>(null)
-  const [selectedDesign, setSelectedDesign] = useState<number | null>(null)
   const [done, setDone] = useState(false)
   const [feedback, setFeedback] = useState("")
   const [selectedVendor, setSelectedVendor] = useState<number | null>(null)
@@ -73,7 +68,16 @@ export default function CreatePage() {
   const [showRequestModal, setShowRequestModal] = useState(false)
   const [fundingTitle, setFundingTitle] = useState("")
   const [fundingDesc, setFundingDesc] = useState("")
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null)
+  const [generateError, setGenerateError] = useState<string | null>(null)
+  const [artists, setArtists] = useState<{ artistId: number; artistName: string; artistProfileImg: string }[]>([])
+  const [submitError, setSubmitError] = useState("")
+  const [submitting, setSubmitting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    api.getMyArtists().then(res => setArtists(res.data)).catch(() => {})
+  }, [])
 
   const transition = (next: Screen, delay = 0) => {
     setAnimating(true)
@@ -96,10 +100,67 @@ export default function CreatePage() {
     if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!prompt.trim()) return
     transition("generating")
-    setTimeout(() => transition("result"), 2800)
+    setGenerateError(null)
+    try {
+      const imageFile = await getOrCreateImageFile(referenceImage)
+      const res = await api.generateImage(prompt, imageFile)
+      const b64 = res.imageBase64
+      setGeneratedImageUrl(b64 ? `data:image/png;base64,${b64}` : null)
+      if (!b64) setGenerateError("imageBase64 필드가 없습니다")
+    } catch (e) {
+      setGeneratedImageUrl(null)
+      setGenerateError(e instanceof Error ? e.message : String(e))
+    }
+    transition("result")
+  }
+
+  const handleRegenerate = async () => {
+    if (!feedback.trim()) return
+    setFeedback("")
+    transition("generating")
+    setGenerateError(null)
+    try {
+      const imageFile = await getOrCreateImageFile(referenceImage)
+      const res = await api.generateImage(`${prompt} ${feedback}`, imageFile)
+      const b64 = res.imageBase64
+      setGeneratedImageUrl(b64 ? `data:image/png;base64,${b64}` : null)
+      if (!b64) setGenerateError("imageBase64 필드가 없습니다")
+    } catch (e) {
+      setGeneratedImageUrl(null)
+      setGenerateError(e instanceof Error ? e.message : String(e))
+    }
+    transition("result")
+  }
+
+  const handleConfirm = async () => {
+    if (!fundingTitle.trim()) return
+    setSubmitting(true)
+    try {
+      const targetDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      await api.createProject({
+        artistId: selectedArtist ?? 0,
+        title: fundingTitle,
+        description: fundingDesc,
+        aiImageUrl: generatedImageUrl ?? "",
+        vendorProductId: selectedVendor ?? 0,
+        targetDate,
+      }).catch(() => {})
+    } finally {
+      setSubmitting(false)
+    }
+    const vendorName = vendors.find(v => v.id === selectedVendor)?.name ?? ""
+    localStorage.setItem("ssok:pendingProject", JSON.stringify({
+      title: fundingTitle,
+      description: fundingDesc,
+      imageUrl: generatedImageUrl,
+      vendorName,
+      createdAt: new Date().toISOString(),
+    }))
+    setShowRequestModal(false)
+    setDone(true)
   }
 
   return (
@@ -156,23 +217,36 @@ export default function CreatePage() {
                 내 아티스트 <span className="font-normal">· 찜한 목록</span>
               </p>
               <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                {artists.slice(0, 4).map((a) => (
-                  <button
-                    key={a.id}
-                    type="button"
-                    onClick={() => setSelectedArtist(selectedArtist === a.id ? null : a.id)}
-                    className={cn(
-                      "shrink-0 flex flex-col items-center gap-1.5 rounded-2xl px-4 py-2.5 text-center transition-all",
-                      selectedArtist === a.id
-                        ? "bg-primary text-white shadow-sm"
-                        : "bg-secondary text-muted-foreground"
-                    )}
-                  >
-                    <span className="text-xs font-bold whitespace-nowrap">{a.name}</span>
-                    <span className={cn("text-[9px] leading-tight max-w-[72px] line-clamp-1",
-                      selectedArtist === a.id ? "text-white/80" : "text-muted-foreground/70"
-                    )}>{a.desc.split(" ").slice(0, 3).join(" ")}</span>
-                  </button>
+                {artists.length === 0 ? (
+                  <p className="text-xs text-muted-foreground py-2">찜한 아티스트가 없어요</p>
+                ) : artists.map((a) => (
+                  <div key={a.artistId} className="shrink-0 relative">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedArtist(selectedArtist === a.artistId ? null : a.artistId)}
+                      className={cn(
+                        "flex items-center gap-1.5 rounded-2xl pl-3.5 pr-8 py-2.5 text-center transition-all",
+                        selectedArtist === a.artistId
+                          ? "bg-primary text-white shadow-sm"
+                          : "bg-secondary text-muted-foreground"
+                      )}
+                    >
+                      <span className="text-xs font-bold whitespace-nowrap">{a.artistName}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        await api.toggleArtistHeart(a.artistId).catch(() => {})
+                        setArtists(prev => prev.filter(x => x.artistId !== a.artistId))
+                        if (selectedArtist === a.artistId) setSelectedArtist(null)
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[13px] leading-none"
+                      title="찜 해제"
+                    >
+                      ❤️
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -284,7 +358,17 @@ export default function CreatePage() {
 
           {/* 디자인 1장 */}
           <div className="relative w-full aspect-square overflow-hidden rounded-3xl bg-secondary/30 shadow-sm ring-1 ring-border/40">
-            <Image src={generatedDesigns[0].image} alt="생성된 디자인" fill className="object-cover" />
+            {generatedImageUrl
+              ? <img src={generatedImageUrl} alt="생성된 디자인" className="h-full w-full object-cover" />
+              : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center">
+                  <p className="text-muted-foreground text-sm">이미지를 불러올 수 없어요</p>
+                  {generateError && (
+                    <p className="text-[11px] text-red-400 bg-red-50 rounded-xl px-3 py-2 break-all">{generateError}</p>
+                  )}
+                </div>
+              )
+            }
           </div>
 
           {/* 피드백 */}
@@ -300,7 +384,7 @@ export default function CreatePage() {
             <button
               type="button"
               disabled={!feedback.trim()}
-              onClick={() => { setFeedback(""); transition("generating"); setTimeout(() => transition("result"), 2800) }}
+              onClick={handleRegenerate}
               className="w-full rounded-2xl border border-primary/40 py-3 text-sm font-semibold text-primary transition-all active:scale-[0.98] disabled:opacity-35"
             >
               피드백 반영해서 다시 만들기
@@ -357,6 +441,10 @@ export default function CreatePage() {
                 <p className="text-right text-[10px] text-muted-foreground">{fundingDesc.length}/120</p>
               </div>
 
+              {submitError && (
+                <p className="rounded-xl bg-red-50 px-4 py-2.5 text-xs font-medium text-red-500">{submitError}</p>
+              )}
+
               <div className="flex gap-2 pt-1">
                 <button
                   type="button"
@@ -367,11 +455,11 @@ export default function CreatePage() {
                 </button>
                 <button
                   type="button"
-                  disabled={!fundingTitle.trim()}
-                  onClick={() => { setShowRequestModal(false); setDone(true) }}
+                  disabled={!fundingTitle.trim() || submitting}
+                  onClick={handleConfirm}
                   className="flex-[2] rounded-2xl bg-primary py-3.5 text-sm font-bold text-white shadow-md shadow-primary/25 transition-all active:scale-[0.98] disabled:opacity-35"
                 >
-                  의뢰 확정하기
+                  {submitting ? "처리 중..." : "의뢰 확정하기"}
                 </button>
               </div>
             </div>

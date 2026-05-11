@@ -1,0 +1,10 @@
+{
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "rewrites": [
+    {
+      "source": "/api-proxy/:path*",
+      "destination": "http://3.37.130.87:8080/:path*"
+    }
+  ]
+}

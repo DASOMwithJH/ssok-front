@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { api, setTokens } from "@/lib/api"
 
 function IconMail() {
   return (
@@ -27,15 +28,22 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState("")
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSubmitting(true)
-    localStorage.setItem("ssok:isLoggedIn", "true")
-    localStorage.setItem("ssok:userEmail", email)
-    setTimeout(() => {
+    setError("")
+    try {
+      const res = await api.login(email, password)
+      setTokens(res.data.accessToken, res.data.refreshToken)
+      localStorage.setItem("ssok:isLoggedIn", "true")
+      localStorage.setItem("ssok:userEmail", email)
       router.replace("/home")
-    }, 400)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "로그인에 실패했습니다")
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -98,6 +106,11 @@ export default function LoginPage() {
             />
           </div>
         </div>
+
+        {/* 에러 메시지 */}
+        {error && (
+          <p className="rounded-xl bg-red-50 px-4 py-2.5 text-xs font-medium text-red-500">{error}</p>
+        )}
 
         {/* 로그인 버튼 */}
         <button

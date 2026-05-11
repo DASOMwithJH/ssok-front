@@ -17,12 +17,12 @@ const categories = [
 ]
 
 const goodsList = [
-  { id: 1, title: "오후셋 콘서트 기념 머그컵", artist: "오후셋", category: "mug", image: "/goods/mug-1.jpg", currentParticipants: 45, targetParticipants: 50, originalPrice: 18000, currentPrice: 12000, daysLeft: 3, status: "ongoing" },
+  { id: 1, title: "오후셋 단독공연 기념 머그컵", artist: "오후셋", category: "mug", image: "/goods/mug-1.jpg", currentParticipants: 45, targetParticipants: 50, originalPrice: 18000, currentPrice: 12000, daysLeft: 3, status: "ongoing" },
   { id: 2, title: "라스트버스 아크릴 키링 세트", artist: "라스트버스", category: "keyring", image: "/goods/keyring-1.jpg", currentParticipants: 120, targetParticipants: 150, originalPrice: 15000, currentPrice: 8000, daysLeft: 5, status: "ongoing" },
-  { id: 3, title: "블루시그널 미니 포스터", artist: "블루시그널", category: "poster", image: "/goods/poster-1.jpg", currentParticipants: 78, targetParticipants: 100, originalPrice: 9000, currentPrice: 5000, daysLeft: 7, status: "ongoing" },
-  { id: 4, title: "슬로우먼데이 폰케이스", artist: "슬로우먼데이", category: "phonecase", image: "/goods/phonecase-1.jpg", currentParticipants: 32, targetParticipants: 80, originalPrice: 25000, currentPrice: 15000, daysLeft: 10, status: "ongoing" },
-  { id: 5, title: "세컨드플로어 에코백", artist: "세컨드플로어", category: "bag", image: "/goods/bag-1.jpg", currentParticipants: 200, targetParticipants: 200, originalPrice: 28000, currentPrice: 18000, daysLeft: 0, status: "completed" },
-  { id: 6, title: "애프터노이즈 후드티", artist: "애프터노이즈", category: "apparel", image: "/goods/hoodie-1.jpg", currentParticipants: 55, targetParticipants: 100, originalPrice: 55000, currentPrice: 42000, daysLeft: 14, status: "ongoing" },
+  { id: 3, title: "블루시그널 도시 감성 미니 포스터", artist: "블루시그널", category: "poster", image: "/goods/poster-1.jpg", currentParticipants: 78, targetParticipants: 100, originalPrice: 9000, currentPrice: 5000, daysLeft: 7, status: "ongoing" },
+  { id: 4, title: "슬로우먼데이 감성 폰케이스", artist: "슬로우먼데이", category: "phonecase", image: "/goods/phonecase-1.jpg", currentParticipants: 32, targetParticipants: 80, originalPrice: 25000, currentPrice: 15000, daysLeft: 10, status: "ongoing" },
+  { id: 5, title: "세컨드플로어 소극장 에코백", artist: "세컨드플로어", category: "bag", image: "/goods/bag-1.jpg", currentParticipants: 200, targetParticipants: 200, originalPrice: 28000, currentPrice: 18000, daysLeft: 0, status: "completed" },
+  { id: 6, title: "노웨어스테이지 공연 후드티", artist: "노웨어스테이지", category: "apparel", image: "/goods/hoodie-1.jpg", currentParticipants: 55, targetParticipants: 100, originalPrice: 55000, currentPrice: 42000, daysLeft: 14, status: "ongoing" },
 ]
 
 type Goods = typeof goodsList[number]
